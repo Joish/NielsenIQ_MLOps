@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "counter-webapp"
+version = "0.1.0"
+description = "Counter Application with TensorFlow Serving"
+authors = ["Joish"]
+packages = [{include = "counter"}]  # Add this line to specify package location
+
+[tool.poetry.dependencies]
+python = "^3.12.3"
+flask = "^3.0.0"
+pymongo = "^4.6.0"
+requests = "^2.31.0"
+python-dotenv = "^1.0.0"
+numpy = "^1.26.0"
+pillow = "^11.2.1"
+sqlalchemy = "^2.0.40"
+psycopg2-binary = "^2.9.10"
+alembic = "^1.15.2"
+pydantic = "^2.11.4"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+black = "^24.1.0"
+flake8 = "^7.0.0"
+mypy = "^1.8.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+webapp = "counter.entrypoints.webapp:main"  # Changed from 'start' to more specific 'webapp'

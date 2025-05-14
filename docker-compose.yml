@@ -1,0 +1,107 @@
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: counter-app
+    environment:
+      - ENV=${ENV}
+      - TFS_HOST=${TFS_HOST}
+      - TFS_PORT=${TFS_PORT}
+      - POETRY_VIRTUALENVS_CREATE=${POETRY_VIRTUALENVS_CREATE}
+      - RFCN_MODEL_NAME=${RFCN_MODEL_NAME}
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-counter_db}
+    ports:
+      - "${COUNTER_APP_PORT}:${COUNTER_APP_PORT}"
+    volumes:
+      - .:/app
+      - /app/__pycache__
+      - /app/**/__pycache__
+      - webapp_data:/app/data
+      - poetry-cache:/opt/.cache
+    depends_on:
+      - mongodb
+      - tfserving
+      - postgres
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  mongodb:
+    container_name: test-mongo
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  tfserving:
+    container_name: tfserving
+    image: intel/intel-optimized-tensorflow-serving:2.8.0
+    ports:
+      - "8500:8500"
+      - "8501:8501"
+    volumes:
+      - ./tmp/model:/models
+    environment:
+      - OMP_NUM_THREADS=${NUM_CORES:-4}
+      - TENSORFLOW_INTER_OP_PARALLELISM=${TENSORFLOW_INTER_OP_PARALLELISM:-2}
+      - TENSORFLOW_INTRA_OP_PARALLELISM=${NUM_CORES:-4}
+    command: --model_config_file=/models/model_config.config
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  postgres:
+    container_name: postgres
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-counter_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL:-admin@admin.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD:-admin}
+      - PGADMIN_CONFIG_SERVER_MODE=False
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  webapp_data:
+  poetry-cache:
+  postgres_data:
+  pgadmin_data:
+

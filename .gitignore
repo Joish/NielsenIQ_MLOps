@@ -1,4 +1,6 @@
-.idea
-.venv
-spikes
-*.pyc
+tmp/model/*
+!.gitignore
+!model/model_config.config
+.idea/
+.venv/
+**/__pycache__/
