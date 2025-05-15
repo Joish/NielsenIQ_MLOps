@@ -68,7 +68,6 @@ NielsenIQ_MLOps
 │     └── ae2870447b2b_initial_schema.py
 ├── poetry.lock
 ├── pyproject.toml
-├── README2.md
 ├── README.md
 ├── resources
 │ └── images
