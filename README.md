@@ -1,10 +1,10 @@
----
-
 # NIQ Innovation Enablement – Challenge 1: Object Counting
 
 ## 🚀 Overview
 
 This project implements a scalable object counting system for images via a Flask-based API, TensorFlow Serving, and containerized microservices.
+
+---
 
 ### ✨ Features
 
