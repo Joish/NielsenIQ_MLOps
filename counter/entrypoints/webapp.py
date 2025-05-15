@@ -25,7 +25,7 @@ def create_app():
         """
         return jsonify({'status': 'healthy', 'timestamp': time.time()}), HTTPStatus.OK
 
-    @app.route('/object-count', methods=['POST'])
+    @app.route('/v1/object-count', methods=['POST'])
     def object_detection():
         """
         Endpoint to detect and count objects in an uploaded image.

@@ -11,7 +11,7 @@ class CountDetectedObjects:
         self.__object_detector = object_detector
         self.__object_count_repo = object_count_repo
 
-    def execute(self, image, threshold, return_total: bool = False) -> CountResponse:
+    def execute(self, image, threshold, return_total=False) -> CountResponse:
         """
         Executes object detection and counting on the provided image.
 
