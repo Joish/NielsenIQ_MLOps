@@ -1,6 +1,7 @@
 import pytest
 
-from counter.adapters.count_repo import count_repo_strategy, CountPostgresRepo, CountInMemoryRepo, CountMongoDBRepo
+from counter.adapters.count_repo import CountPostgresRepo
+from counter.adapters.count_repo import count_repo_strategy, CountInMemoryRepo, CountMongoDBRepo
 from counter.constants import CountRepoConstants
 from counter.domain.models import ObjectCount
 
@@ -15,6 +16,12 @@ def test_count_repo_strategy1():
 def count_in_memory_repo():
     """Fixture to create a fresh in-memory repository for each test."""
     return CountInMemoryRepo()
+
+
+@pytest.fixture
+def repo():
+    # credentials don't matter – they’re never used after monkey-patching
+    return CountPostgresRepo("user", "pwd", "localhost", "5432", "irrelevant_db")
 
 
 def test_read_values(count_in_memory_repo):
@@ -56,3 +63,23 @@ def test_update_values(count_in_memory_repo):
     count_in_memory_repo.update_values([ObjectCount('bird', 3)])
     assert count_in_memory_repo.store['bird'].count == 3, "Expected count for 'bird' to be 3"
     assert len(count_in_memory_repo.store) == 3, "Expected the store to contain three object counts"
+
+
+def test_postgres_read_values_empty(repo):
+    assert repo.read_values() == []
+
+
+def test_postgres_update_and_read_multiple(repo):
+    repo.update_values([
+        ObjectCount("car", 3),
+        ObjectCount("person", 2),
+    ])
+    values = sorted(repo.read_values(), key=lambda oc: oc.object_class)
+    assert [(v.object_class, v.count) for v in values] == [("car", 3), ("person", 2)]
+
+
+def test_postgres_increment_existing_value(repo):
+    repo.update_values([ObjectCount("cat", 1)])
+    repo.update_values([ObjectCount("cat", 4)])
+    cat_count = repo.read_values(["cat"])[0]
+    assert cat_count.count == 5

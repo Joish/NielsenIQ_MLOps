@@ -104,7 +104,7 @@ class CountPostgresRepo(ObjectCountRepo):
                         session.add(count_obj)
 
                 session.commit()
-            except Exception as e:
+            except Exception as e:  # pragma: no cover
                 session.rollback()
                 raise e
 
@@ -140,5 +140,5 @@ def count_repo_strategy(count_repo) -> ObjectCountRepo:
                                 database=Constants.MONGO_DB)
     elif count_repo == CountRepoConstants.IN_MEMORY_REPO:
         return CountInMemoryRepo()
-    else:
+    else:  # pragma: no cover
         raise ValueError(f"Invalid count repo name: {count_repo}")

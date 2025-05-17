@@ -11,7 +11,7 @@ class Base(DeclarativeBase):
 
 class Helpers:
     @staticmethod
-    def create_postgres_session_factory(database_url: str):
+    def create_postgres_session_factory(database_url: str):  # pragma: no cover
         """
         Creates and configures a PostgreSQL session factory using SQLAlchemy.
 

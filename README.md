@@ -76,6 +76,9 @@ NielsenIQ_MLOps
 │     └── food.jpg
 ├── setup.sh
 ├── tests
+│ ├── adapters
+│ │ └── test_count_repo.py
+│ ├── conftest.py
 │ ├── domain
 │ │ ├── helpers.py
 │ │ ├── __init__.py
@@ -86,12 +89,7 @@ NielsenIQ_MLOps
 │ └── __init__.py
 └── tmp
     ├── debug
-    │ ├── all_predictions.jpg
-    │ ├── valid_predictions_with_threshold_0.5.jpg
-    │ ├── valid_predictions_with_threshold_0.8.jpg
-    │ └── valid_predictions_with_threshold_1.0.jpg
     └── model
-
 ```
 
 ---
