@@ -249,7 +249,7 @@ RFCN_MODEL_NAME="rfcn"
 docker exec -it counter-app bash
 pytest
 (or)
-pytest --cov # with coverage
+pytest --cov --cov-report term-missing # with coverage
 ```
 
 ---

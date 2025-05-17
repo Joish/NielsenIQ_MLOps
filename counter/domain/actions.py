@@ -27,7 +27,8 @@ class CountDetectedObjects:
         object_counts = count(predictions)
         self.__object_count_repo.update_values(object_counts)
 
-        total_objects = self.__object_count_repo.read_values() if return_total else None
+        total_objects = self.__object_count_repo.read_values(
+            [oc.object_class for oc in object_counts]) if return_total else None
 
         return CountResponse(
             current_objects=object_counts,

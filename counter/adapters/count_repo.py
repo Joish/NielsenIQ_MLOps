@@ -80,8 +80,8 @@ class CountPostgresRepo(ObjectCountRepo):
 
     def read_values(self, object_classes: List[str] = None) -> List[ObjectCount]:
         """Fetches object counts from the database, optionally filtered by object classes."""
-        # if object_classes is None:
-        #     object_classes = []
+        if object_classes is None:
+            object_classes = []
 
         with self.__session_factory() as session:
             query = session.query(ObjectCountDB)
