@@ -1,6 +1,8 @@
 tmp/model/*
+tmp/debug/*
 !.gitignore
 !model/model_config.config
 .idea/
 .venv/
 **/__pycache__/
+.coverage

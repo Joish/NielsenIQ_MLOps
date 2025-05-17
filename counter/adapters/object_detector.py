@@ -97,5 +97,5 @@ def object_detector_strategy(model_name) -> ObjectDetector:
                                  )
     elif model_name == ModelConstants.FAKE_MODEL_NAME:
         return FakeObjectDetector()
-    else:
+    else:  # pragma: no cover
         raise ValueError(f"Invalid model name: {model_name}")

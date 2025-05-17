@@ -43,5 +43,5 @@ class Helpers:
 
         if not file:
             raise ValueError("File is required.")
-        if file.mimetype not in Constants.ALLOWED_IMAGE_MIME_TYPES:
+        if file.mimetype not in Constants.ALLOWED_IMAGE_MIME_TYPES:  # pragma: no cover
             raise ValueError(f"Unsupported image type: {file.mimetype}")

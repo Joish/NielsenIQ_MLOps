@@ -30,7 +30,7 @@ class CountInMemoryRepo(ObjectCountRepo):
                 self.store[key] = ObjectCount(key, new_object_count.count)
 
 
-class CountMongoDBRepo(ObjectCountRepo):
+class CountMongoDBRepo(ObjectCountRepo):  # pragma: no cover
 
     def __init__(self, host, port, database):
         self.__host = host
@@ -79,6 +79,9 @@ class CountPostgresRepo(ObjectCountRepo):
         self.__session_factory = Helpers.create_postgres_session_factory(self.__database_url)
 
     def read_values(self, object_classes: List[str] = None) -> List[ObjectCount]:
+        """Fetches object counts from the database, optionally filtered by object classes."""
+        # if object_classes is None:
+        #     object_classes = []
 
         with self.__session_factory() as session:
             query = session.query(ObjectCountDB)
@@ -88,17 +91,22 @@ class CountPostgresRepo(ObjectCountRepo):
             return [ObjectCount(row.object_class, row.count) for row in query.all()]
 
     def update_values(self, new_values: List[ObjectCount]):
+        """Updates or creates new object counts in the database."""
         with self.__session_factory() as session:
-            for value in new_values:
-                count_obj = session.query(ObjectCountDB).filter_by(object_class=value.object_class).first()
+            try:
+                for value in new_values:
+                    count_obj = session.query(ObjectCountDB).filter_by(object_class=value.object_class).first()
 
-                if count_obj:
-                    count_obj.count += value.count
-                else:
-                    count_obj = ObjectCountDB(object_class=value.object_class, count=value.count)
-                    session.add(count_obj)
+                    if count_obj:
+                        count_obj.count += value.count
+                    else:
+                        count_obj = ObjectCountDB(object_class=value.object_class, count=value.count)
+                        session.add(count_obj)
 
-            session.commit()
+                session.commit()
+            except Exception as e:
+                session.rollback()
+                raise e
 
 
 def count_repo_strategy(count_repo) -> ObjectCountRepo:

@@ -24,23 +24,23 @@ services:
       - webapp_data:/app/data
       - poetry-cache:/opt/.cache
     depends_on:
-      - mongodb
+#      - mongodb
       - tfserving
       - postgres
     networks:
       - app-network
     restart: unless-stopped
 
-  mongodb:
-    container_name: test-mongo
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - app-network
-    restart: unless-stopped
+#  mongodb:
+#    container_name: test-mongo
+#    image: mongo:latest
+#    ports:
+#      - "27017:27017"
+#    volumes:
+#      - mongodb_data:/data/db
+#    networks:
+#      - app-network
+#    restart: unless-stopped
 
   tfserving:
     container_name: tfserving
@@ -56,7 +56,8 @@ services:
       - TENSORFLOW_INTRA_OP_PARALLELISM=${NUM_CORES:-4}
     command: --model_config_file=/models/model_config.config
     depends_on:
-      - mongodb
+#      - mongodb
+      - postgres
     networks:
       - app-network
     restart: unless-stopped
@@ -99,7 +100,7 @@ networks:
     driver: bridge
 
 volumes:
-  mongodb_data:
+#  mongodb_data:
   webapp_data:
   poetry-cache:
   postgres_data:

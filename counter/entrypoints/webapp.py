@@ -23,7 +23,7 @@ def create_app():
                 - JSON response with 'status' and 'timestamp' fields
                 - HTTP status code 200 indicating a successful response
         """
-        return jsonify({'status': 'healthy', 'timestamp': time.time()}), HTTPStatus.OK
+        return jsonify({'status': 'healthy', 'timestamp': time.time()}), HTTPStatus.OK  # pragma: no cover
 
     @app.route('/v1/object-count', methods=['POST'])
     def object_detection():
@@ -71,12 +71,12 @@ def create_app():
             return jsonify({"error": ve.errors()}), HTTPStatus.UNPROCESSABLE_ENTITY
         except ValueError as e:
             return jsonify({"error": str(e)}), HTTPStatus.BAD_REQUEST
-        except Exception as e:
+        except Exception as e: # pragma: no cover
             return jsonify({"error": "Internal server error", "details": str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
 
     return app
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     app = create_app()
     app.run('0.0.0.0', debug=True)
