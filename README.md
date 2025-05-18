@@ -70,10 +70,6 @@ NielsenIQ_MLOps
 ├── pyproject.toml
 ├── README.md
 ├── resources
-│ └── images
-│     ├── boy.jpg
-│     ├── cat.jpg
-│     └── food.jpg
 ├── setup.sh
 ├── tests
 │ ├── adapters
