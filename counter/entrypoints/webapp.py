@@ -33,10 +33,10 @@ def create_app():
         Endpoint to detect and count objects in an uploaded image.
 
         Expects a multipart/form-data POST request with:
-            - file: An image file in a supported format (JPEG, PNG)
-            - model_name: Name of the detection model to use
-            - threshold: Minimum confidence threshold for object detection
-            - returns_total: Flag to indicate whether to return total object counts
+            - file: An image file in a supported format (JPEG, PNG) :: Required
+            - model_name: Name of the detection model to use :: Optional[Default: rfcn]
+            - threshold: Minimum confidence threshold for object detection :: Optional[Default: 0.5]
+            - returns_total: Flag to indicate whether to return total object counts :: Optional[Default: False]
 
         Returns:
             tuple: A tuple containing:
