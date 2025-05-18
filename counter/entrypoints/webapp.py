@@ -7,11 +7,13 @@ from pydantic import ValidationError
 
 from counter.adapters.helpers import Helpers
 from counter.config import get_count_action
+from counter.constants import Constants
 from counter.domain.models import ObjectCountInput
 
 
 def create_app():
     app = Flask(__name__)
+    app.config['MAX_CONTENT_LENGTH'] = Constants.MAX_CONTENT_LENGTH
 
     @app.route('/health', methods=['GET'])
     def health_check():
@@ -71,7 +73,7 @@ def create_app():
             return jsonify({"error": ve.errors()}), HTTPStatus.UNPROCESSABLE_ENTITY
         except ValueError as e:
             return jsonify({"error": str(e)}), HTTPStatus.BAD_REQUEST
-        except Exception as e: # pragma: no cover
+        except Exception as e:  # pragma: no cover
             return jsonify({"error": "Internal server error", "details": str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
 
     return app

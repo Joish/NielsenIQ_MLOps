@@ -4,6 +4,7 @@ import os
 
 class Constants:
     DEFAULT_THRESHOLD = 0.5
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
     TFS_HOST = os.environ.get("TFS_HOST")
     TFS_PORT = os.environ.get("TFS_PORT")
