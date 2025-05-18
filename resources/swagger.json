@@ -1,0 +1,132 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Object Detection API",
+    "description": "API for detecting and counting objects in images.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:5000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Returns the health status of the service.",
+        "responses": {
+          "200": {
+            "description": "Successful health check",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "healthy"
+                },
+                "timestamp": {
+                  "type": "number",
+                  "format": "float"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/object-count": {
+      "post": {
+        "summary": "Object Detection",
+        "description": "Detect and count objects in the uploaded image.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "The image file (JPEG/PNG)"
+          },
+          {
+            "name": "model_name",
+            "in": "formData",
+            "required": false,
+            "type": "string",
+            "default": "rfcn",
+            "description": "Detection model name"
+          },
+          {
+            "name": "threshold",
+            "in": "formData",
+            "required": false,
+            "type": "number",
+            "format": "float",
+            "default": 0.5,
+            "description": "Confidence threshold for detection"
+          },
+          {
+            "name": "return_total",
+            "in": "formData",
+            "required": false,
+            "type": "boolean",
+            "default": false,
+            "description": "Flag to include total object count"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "counts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "count": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "count": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid image file"
+          },
+          "422": {
+            "description": "Invalid form data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}
